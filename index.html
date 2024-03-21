@@ -1,168 +1,103 @@
- <!DOCTYPE html>                                   
-<html style="height: 100%;">                                                             
+<!DOCTYPE html>
+<html lang="pt">
 <head>
-    <title>Tradutor Mágico</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nível de Nerdice (Ndn)</title>
     <style>
         body {
-            margin: 0;
-            height: 100vh;
+            font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
         }
-
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
         }
-
-        .keyboard {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            max-width: 90vw;
-            margin: 20px auto;
-        }
-
-        .key {
+        input[type="number"] {
+            width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-            min-width: 60px;
-            user-select: none;
-            font-size: 1.2rem;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box; /* Adds padding inside the box */
         }
-
-        @media (max-width: 600px) {
-            .key {
-                min-width: 50px;
-                font-size: 1rem;
-            }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultado {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <form method="POST">
-        <label for="input_text_latim">Digite a frase em latim para traduzir para mágico:</label><br>
-        <input type="text" id="input_text_latim" name="input_text_latim"><br>
-        <input type="submit" value="Traduzir para Mágico">
+    <form id="nerdForm">
+        <input type="number" id="tn" placeholder="Tempo Nerd (TN) em horas" required><br>
+        <input type="number" id="nppc" placeholder="Número de Pessoas que você Pegou Casualmente (NPPC)" required><br>
+        <input type="number" id="idade" placeholder="Idade" required><br>
+        <input type="number" id="pf" placeholder="Porcentagem para Ficção (F)" required><br>
+        <input type="number" id="pc" placeholder="Porcentagem para Ciência (C)" required><br>
+        <input type="number" id="pm" placeholder="Porcentagem para Matemática (M)" required><br>
+        <input type="number" id="ph" placeholder="Porcentagem para Humanas (H)" required><br>
+        <input type="number" id="pj" placeholder="Porcentagem para Jogos (J)" required><br>
+        <button type="button" onclick="calcularNdn()">Calcular Ndn</button>
+        <p id="resultado"></p>
     </form>
-    <form method="POST">
-        <label for="input_text_magico">Digite a frase em mágico para traduzir para latim:</label><br>
-        <input type="text" id="input_text_magico" name="input_text_magico" oninput="convertToMagic(this)"><br>
-        <input type="submit" value="Traduzir para Latim">   
-    </form>
-    <div class="keyboard">
-    <div class="key" onclick="addCharacter('𐐅')">𐐅</div>
-    <div class="key" onclick="addCharacter('𐐆')">𐐆</div>
-    <div class="key" onclick="addCharacter('𐐇')">𐐇</div>
-    <div class="key" onclick="addCharacter('𐐈')">𐐈</div>
-    <div class="key" onclick="addCharacter('𐐉')">𐐉</div>
-    <div class="key" onclick="addCharacter('𐐊')">𐐊</div>
-    <div class="key" onclick="addCharacter('𐐋')">𐐋</div>
-    <div class="key" onclick="addCharacter('𐐌')">𐐌</div>
-    <div class="key" onclick="addCharacter('𐐍')">𐐍</div>
-    <div class="key" onclick="addCharacter('𐐎')">𐐎</div>
-    <div class="key" onclick="addCharacter('𐐏')">𐐏</div>
-    <div class="key" onclick="addCharacter('𐐐')">𐐐</div>
-    <div class="key" onclick="addCharacter('𐐑')">𐐑</div>
-    <div class="key" onclick="addCharacter('£')">£</div>
-    <div class="key" onclick="addCharacter('𐐓')">𐐓</div>
-    <div class="key" onclick="addCharacter('𐐔')">𐐔</div>
-    <div class="key" onclick="addCharacter('€')">€</div>
-    <div class="key" onclick="addCharacter('𐐖')">𐐖</div>
-    <div class="key" onclick="addCharacter('𐐗')">𐐗</div>
-    <div class="key" onclick="addCharacter('𐐘')">𐐘</div>
-    <div class="key" onclick="addCharacter('𐐙')">𐐙</div>
-    <div class="key" onclick="addCharacter('𐐚')">𐐚</div>
-    <div class="key" onclick="addCharacter('%')">%</div>
-    <div class="key" onclick="addCharacter('𐐜')">𐐜</div>
-    <div class="key" onclick="addCharacter('𐐝')">𐐝</div>
-    <div class="key" onclick="addCharacter('𐐞')">𐐞</div>
-    <div class="key" onclick="addCharacter('.')">.</div>
-    <div class="key" onclick="deleteLastCharacter()">⌫</div>
-    <div class="key" onclick="addCharacter(' ')">&nbsp;</div>
 
-</div>
+    <script>
+        function calcularNdn() {
+            const tn = parseFloat(document.getElementById('tn').value) || 0;
+            const nppc = parseInt(document.getElementById('nppc').value) || 0;
+            const idade = parseInt(document.getElementById('idade').value) || 0;
+            const pf = parseFloat(document.getElementById('pf').value) || 0;
+            const pc = parseFloat(document.getElementById('pc').value) || 0;
+            const pm = parseFloat(document.getElementById('pm').value) || 0;
+            const ph = parseFloat(document.getElementById('ph').value) || 0;
+            const pj = parseFloat(document.getElementById('pj').value) || 0;
 
-<p>Frase traduzida: {{ magic_text }}{{ latin_text }}</p>
-<p>Fonemas: {{ phonemes }}{{ latin_text }}</p>
-<p>Descrição do processo: {{process_description}}</p>
-
-<script>
-    function addCharacter(char) {
-        const input = document.getElementById('input_text_magico');
-        input.value += char;
-    }
-
-        function deleteLastCharacter() {
-        const input = document.getElementById('input_text_magico');
-        input.value = input.value.substring(0, input.value.length - 1);
-    }
-  </script>
-<script>
-    const MAGIC_ALPHABET = {
-    'A': '𐐅',
-    'B': '𐐆',
-    'C': '𐐇',
-    'Ç': '😔',
-    'D': '𐐈',
-    'E': '𐐉',
-    'F': '𐐊',
-    'G': '𐐋',
-    'H': '𐐌',
-    'I': '𐐍',
-    'J': '𐐎',
-    'K': '𐐏',
-    'L': '𐐐',
-    'M': '𐐑',
-    'N': '£',
-    'O': '𐐓',
-    'P': '𐐔',
-    'Q': '€',
-    'R': '𐐖',
-    'S': '𐐗',
-    'T': '𐐘',
-    'U': '𐐙',
-    'V': '𐐚',
-    'W': '%',
-    'X': '𐐜',
-    'Y': '𐐝',
-    'Z': '𐐞',
-
-        };
-
-
-        function convertToMagic(input) {
-            let text = input.value.toUpperCase();
-            let magicText = '';
-            for (let i = 0; i < text.length; i++) {
-                if (MAGIC_ALPHABET.hasOwnProperty(text[i])) {
-                    magicText += MAGIC_ALPHABET[text[i]];
-                } else {
-                    magicText += text[i];
-                }
+            // Verificação da soma das porcentagens
+            const somaPorcentagens = pf + pc + pm + ph + pj;
+            if (somaPorcentagens !== 100) {
+                document.getElementById('resultado').textContent = "Ndn: ∅ (A soma das porcentagens deve ser igual a 100.)";
+                return;
             }
-            input.value = magicText;
-        }
 
-        function addCharacter(character) {
-            const input = document.getElementById('input_text_magico');
-           
-input.value = magicText;
-        }
+            // Cálculo de tempos dedicados a cada categoria
+            const tempos = [
+                (pf / 100) * tn,
+                (pc / 100) * tn,
+                (pm / 100) * tn,
+                (ph / 100) * tn,
+                (pj / 100) * tn,
+            ];
 
-        function addCharacter(character) {
-            const input = document.getElementById('input_text_magico');            input.value += character;
-        }
+            // Cálculo da VCN
+            const media = tempos.reduce((a, b) => a + b, 0) / tempos.length;
+            const vcn = tempos.reduce((acc, val) => acc + (val - media) ** 2, 0) / tempos.length;
 
-        function deleteLastCharacter() {
-            const input = document.getElementById('input_text_magico');
-            input.value = input.value.slice(0, -1);
+            // Cálculo do Ndn
+            const ndn = Math.log(tn / (((1 + nppc) ** 2 / idade) * (1 / (1 + vcn))));
+
+            document.getElementById('resultado').textContent = `Ndn: ${ndn.toFixed(2)}`;
         }
     </script>
 </body>
 </html>
+
